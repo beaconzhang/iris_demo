@@ -4,9 +4,16 @@ import (
     "github.com/kataras/iris"
 )
 
+const (
+    constRequestHeader = "x_request_id"
+)
 
 func innerLogger(ctx iris.Context,loggerHandler func(string, ...interface{}),format string,args ...interface{}){
-    args = append(args,ctx.GetHeader("x_request_id"))
+    requestIdValue := ctx.GetHeader(constRequestHeader)
+    if requestIdValue == ""{
+        requestIdValue = ctx.Values().GetString(constRequestHeader)
+    }
+    args = append(args,requestIdValue)
     loggerHandler(format+" [%s]",args...)
 }
 

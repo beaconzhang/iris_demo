@@ -5,6 +5,7 @@ import (
     "github.com/kataras/iris/middleware/recover"
     "github.com/kataras/iris/middleware/logger"
     "github.com/beaconzhang/iris_demo/common"
+    "github.com/beaconzhang/iris_demo/middleware"
 )
 
 //func handlerLoggerMiddlerware(ctx iris.Context){
@@ -17,18 +18,20 @@ import (
 func main(){
     app := iris.New()
     app.Logger().SetLevel("debug")
+    app.Use(middleware.RequestIdMiddlerware)
     app.Use(recover.New())
     loggerConfig := logger.DefaultConfig()
     loggerConfig.MessageHeaderKeys = make([]string,1)
     loggerConfig.MessageHeaderKeys = append(loggerConfig.MessageHeaderKeys,"x_request_id")
+    loggerConfig.MessageContextKeys = append(loggerConfig.MessageContextKeys,"x_request_id")
     logger := logger.New(loggerConfig)
     app.Use(logger)
     //app.Use(handlerLoggerMiddlerware)
 
     app.Handle("GET","/",func(ctx iris.Context){
-        common.InnerLoggerInfof(ctx,"get hello,prefix:%s,head:%s",ctx.Application().Logger().Prefix,ctx.GetHeader("x_request_id"))
+        common.InnerLoggerInfof(ctx,"get hello")
         ctx.HTML("<h1>welcome</h1>")
-        common.InnerLoggerErrorf(ctx,"done,prefix:%s,head:%s",ctx.Application().Logger().Prefix,ctx.GetHeader("x_request_id"))
+        common.InnerLoggerErrorf(ctx,"done hello")
     })
 
     app.Handle("GET","/ping",func(ctx iris.Context){
