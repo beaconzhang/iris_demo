@@ -5,6 +5,7 @@ import (
     "net"
     "fmt"
     "os"
+    "path/filepath"
     "strings"
 )
 
@@ -43,7 +44,24 @@ func GetMac(name string) (string,string) {
 func GetPid()string{
     pid := os.Getpid()
     //fmt.Printf("pid:%d\n",pid)
-    return fmt.Sprintf("%4x",pid)
+    return fmt.Sprintf("%04x",pid)
+}
+
+func GetRootDir() string{
+    dir,err := filepath.Abs(filepath.Dir(os.Args[0]))
+    if err != nil {
+        fmt.Printf("get current file error:%s\n",err.Error())
+        panic(err)
+    }
+    return dir
+}
+
+func GetEnv() string{
+    env := os.Getenv("ENV")
+    if env == ""{
+        env = "dev"
+    }
+    return env
 }
 
 //func main(){

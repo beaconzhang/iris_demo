@@ -33,7 +33,8 @@ func init(){
     prefix = "hello"
     hashSalt = "world"
     mac,ip := common.GetMac(ethnetName)
-    constPrefix  = fmt.Sprintf("%s%s%s",prefix,mac,ip)
+    pid := common.GetPid()
+    constPrefix  = fmt.Sprintf("%s%s%s%s",prefix,mac,ip,pid)
     requestId = 0
 }
 
