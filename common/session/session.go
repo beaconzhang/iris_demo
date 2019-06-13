@@ -12,6 +12,10 @@ type Sessions struct{
 	sessions.Sessions
 }
 
+type SessionUserInfo struct{
+	Id string
+}
+
 func New() *Sessions{
 	sessionConf := common.GetConfData().Session
 	redisClient := storage.GetRedisClient()
@@ -29,13 +33,18 @@ func (s *Sessions)IsLogin(ctx iris.Context) *sessions.Session{
 	sessionConf := common.GetConfData().Session
 	cookieValue := sessions.GetCookie(ctx, sessionConf.CookieId)
 	if cookieValue == ""{
+		common.InnerLoggerInfof(ctx,"[None] login")
 		return nil
 	}
 	sess := s.Start(ctx)
-	employeInfo := sess.Get(sessionConf.EmployeeInfo)
+	employeInfo := sess.Get(sessionConf.EmployeeInfo.Prefix)
 	if employeInfo == nil {
+		s.Destroy(ctx)
+		common.InnerLoggerInfof(ctx,"[session expire] login")
 		return nil
 	}
-	sess.SetFlash(sessionConf.EmployeeInfo,employeInfo)
+	common.InnerLoggerInfof(ctx,"[%s] login",employeInfo.(SessionUserInfo).Id)
+	sess.SetFlash(sessionConf.EmployeeInfo.Prefix,employeInfo)
+	ctx.Values().Set("iris_session",sess)
 	return sess
 }

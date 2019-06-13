@@ -1,6 +1,4 @@
-Hacker: false
-hello: world
-
+version: 1
 redis:
   network: "tcp"
   host: "127.0.0.1"
@@ -17,3 +15,13 @@ session:
   expire: 60
   employeeinfo: "employee_info"
 
+employeeinfo:
+  prefix: "employee_info"
+
+auth:
+  loginurl: "/auth/user/login"
+
+whitelistUrl:
+  - "/auth/user/login"
+  - "/hei/ha"
+  - "/public/css/site.css"

@@ -17,6 +17,8 @@ var (
 type ConfData struct{
 	Redis redisConf
 	Session sessionConf
+	Auth authConf
+	WhitelistUrl []string
 }
 
 type redisConf struct{
@@ -34,7 +36,15 @@ type redisConf struct{
 type sessionConf struct{
 	CookieId string
 	Expire int
-	EmployeeInfo string
+	EmployeeInfo userRecord
+}
+
+type userRecord struct{
+	Prefix string
+}
+
+type authConf struct{
+	LoginUrl string
 }
 
 func GetConfData() *ConfData{

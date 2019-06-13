@@ -1,14 +1,1 @@
-Hacker: true
-name: steve
-hobbies:
-    - skateboarding
-    - snowboarding
-    - go
-clothing:
-    jacket: leather
-    trousers: denim
-    pants:
-        size: large
-age: 35
-eyes : brown
-beard: true
+version: 1

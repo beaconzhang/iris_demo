@@ -52,9 +52,9 @@ func main(){
 		if s == nil{
 			common.InnerLoggerErrorf(ctx,"no cookie id,user not login")
 			s = sess.Start(ctx)
-			s.Set(sessionConf.EmployeeInfo,iris.Map{"id":"2726782"})
+			s.Set(sessionConf.EmployeeInfo.Id,iris.Map{"id":"2726782"})
 		}
-		employeeId := s.Get(sessionConf.EmployeeInfo).(map[string]interface{})["id"].(string)
+		employeeId := s.Get(sessionConf.EmployeeInfo.Id).(map[string]interface{})["id"].(string)
 		common.InnerLoggerInfof(ctx,"employee id:%s",employeeId)
 		s.Set(key,value)
 		valueSet := s.Get(key).(string)
