@@ -1,3 +1,19 @@
 Hacker: false
 hello: world
 
+redis:
+  network: "tcp"
+  host: "127.0.0.1"
+  port: "6379"
+  passwd: "979bc07824d45ecd1edd52f6d1370bca"
+  database: ""
+  maxidle: 0
+  maxactive: 0
+  idletimeout: 5
+  prefix: "iris_demo_session"
+
+session:
+  cookieid: "iris_demo_session_cookieid"
+  expire: 60
+  employeeinfo: "employee_info"
+

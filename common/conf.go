@@ -9,9 +9,44 @@ import (
 )
 
 var (
-	ConfData *viper.Viper
-	confMutex sync.RWMutex
+	confDataInterface *viper.Viper
+	confMutex sync.Mutex
+	confDataParse *ConfData
 )
+
+type ConfData struct{
+	Redis redisConf
+	Session sessionConf
+}
+
+type redisConf struct{
+	Network string
+	Host string
+	Port string
+	Passwd string
+	Database string
+	Maxidle int
+	Maxactive int
+	Idletimeout int
+	Prefix string
+}
+
+type sessionConf struct{
+	CookieId string
+	Expire int
+	EmployeeInfo string
+}
+
+func GetConfData() *ConfData{
+	if confDataParse != nil{
+		return confDataParse
+	}
+	confDataParse = &ConfData{}
+	confMutex.Lock()
+	defer confMutex.Unlock()
+	confDataInterface.Unmarshal(confDataParse)
+	return confDataParse
+}
 
 func loadConf(filename string){
 	rootDir := GetRootDir()
@@ -34,10 +69,10 @@ func loadConf(filename string){
 func initConfig(){
 	viper.Reset()
 	viper.SetConfigType("yaml")
-	loadConf("iris.local.yml")
-	ConfData = viper.GetViper()
+	confDataInterface = viper.GetViper()
 	loadConf("iris.yml")
 	loadConf(fmt.Sprintf("iris.%s.yml",GetEnv()))
+	loadConf("iris.local.yml")
 }
 
 func init(){
