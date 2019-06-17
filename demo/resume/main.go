@@ -41,6 +41,10 @@ func main(){
 		common.InnerLoggerInfof(ctx,"login")
 		ctx.View("user/test.html")
 	})
+	app.Get("/ha/hei",func(ctx iris.Context){
+
+		ctx.Writef("request url:%s")
+	})
 	//app.Get("/hello",func(ctx iris.Context){
 	//	ctx.Writef("hei ha")
 	//	common.InnerLoggerInfof(ctx,"login")

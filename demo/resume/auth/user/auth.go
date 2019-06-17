@@ -2,8 +2,10 @@ package auth
 
 import (
 	"github.com/beaconzhang/iris_demo/common"
+	"github.com/beaconzhang/iris_demo/common/thirtypart_auth/github"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
+	"net/url"
 )
 
 var (
@@ -29,9 +31,21 @@ func (c *AuthUserController) BeforeActivation(b mvc.BeforeActivation) {
 }
 
 func (ac *AuthUserController)GetUserLogin(ctx iris.Context) mvc.Result{
-	common.InnerLoggerInfof(ctx,"/auth/user/login in")
+	next := ctx.FormValueDefault("next","/")
+	redirectUrl :="/auth/github/login?"+ "next="+url.QueryEscape(next)
+	common.InnerLoggerInfof(ctx,"redirectUrl:%s",redirectUrl)
 	return  mvc.View{
 		Name:  "user/login.html",
-		Data: templateLoginField{Title:"User login",GithubUrl:"/auth/user/github/login"},
+		Data: templateLoginField{Title:"User login",GithubUrl:redirectUrl},
 	}
+}
+
+func (ac *AuthUserController)GetGithubLogin(ctx iris.Context) {
+	githubAuth := &github.GithubAuth{}
+	githubAuth.GetIdentify(ctx)
+}
+
+func (ac *AuthUserController)GetGithubCallback(ctx iris.Context){
+	githubAuth := &github.GithubAuth{}
+	githubAuth.GetUserInfo(ctx)
 }

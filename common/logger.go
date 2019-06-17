@@ -9,10 +9,7 @@ const (
 )
 
 func innerLogger(ctx iris.Context,loggerHandler func(string, ...interface{}),format string,args ...interface{}){
-    requestIdValue := ctx.GetHeader(constRequestHeader)
-    if requestIdValue == ""{
-        requestIdValue = ctx.Values().GetString(constRequestHeader)
-    }
+    requestIdValue := GetXRequestId(ctx)
     args = append(args,requestIdValue)
     loggerHandler(format+" [%s]",args...)
 }

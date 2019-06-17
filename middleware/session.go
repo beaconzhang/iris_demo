@@ -25,18 +25,19 @@ func SessionMiddlerware(ctx iris.Context){
 	sessesion := session_manager.New()
 	sess := sessesion.IsLogin(ctx)
 	if sess == nil  {
-		param := ctx.Path()
-		if _,ok := mapWhitelistUrl[param];!ok {
+		param := ctx.Request().RequestURI
+		path := ctx.Path()
+		if _,ok := mapWhitelistUrl[path];!ok {
 			if ctx.IsAjax() {
 				ctx.JSON(iris.Map{"sucess": false, "next": param})
 				return
 			}
 			confData := common.GetConfData()
-			nextUrl := confData.Auth.LoginUrl + "?next="+param
-			encodedPath, _ := url.QueryUnescape(nextUrl)
-			ctx.Redirect(encodedPath,iris.StatusFound)
-			//return
+			encodedPath := url.QueryEscape(param)
+			ctx.Redirect(confData.Auth.LoginUrl + "?next=" + encodedPath,iris.StatusFound)
+			return
 		}
+		common.InnerLoggerInfof(ctx,"[%s] in whitelist",param)
 	}
 	ctx.Next()
 }

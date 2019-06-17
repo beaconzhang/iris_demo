@@ -10,6 +10,7 @@ import (
     "crypto/rand"
     "fmt"
     "sync/atomic"
+    "time"
 )
 
 func getRandom() string{
@@ -41,7 +42,7 @@ func init(){
 func getRequestId() string{
     myid := atomic.AddUint64(&requestId, 1)
     myid = myid & 0xffffffff
-    return fmt.Sprintf("%s%s%08x",constPrefix,getRandom(),myid)
+    return fmt.Sprintf("%s%s%08x%08x",constPrefix,getRandom(),(time.Now().Unix())&0xffffffff,myid)
 }
 
 func RequestIdMiddlerware(ctx iris.Context){

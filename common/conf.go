@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"github.com/kataras/golog"
 	"github.com/spf13/viper"
 	"os"
 	"path/filepath"
@@ -45,16 +46,34 @@ type userRecord struct{
 
 type authConf struct{
 	LoginUrl string
+	Github githubConf
 }
+
+type githubConf struct{
+	GithubLoginUrl string
+	GithubCallBackUrl string
+	GithubIdentityUrl string
+	GithubTokenUrl string
+	GithubApiUrl string
+	GithubClientId string
+	GithubClientSecret string
+	GithubScope string
+}
+
+
 
 func GetConfData() *ConfData{
 	if confDataParse != nil{
 		return confDataParse
 	}
-	confDataParse = &ConfData{}
 	confMutex.Lock()
 	defer confMutex.Unlock()
-	confDataInterface.Unmarshal(confDataParse)
+	if confDataParse != nil{
+		return confDataParse
+	}
+	confDataParse = &ConfData{}
+	err := confDataInterface.Unmarshal(confDataParse)
+	golog.Errorf("read conf data error:%s",err.Error())
 	return confDataParse
 }
 
@@ -87,5 +106,7 @@ func initConfig(){
 
 func init(){
 	initConfig()
+	confData := GetConfData()
+	golog.Infof("read conf data:%v",confData)
 }
 

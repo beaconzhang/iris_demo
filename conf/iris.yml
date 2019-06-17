@@ -20,8 +20,21 @@ employeeinfo:
 
 auth:
   loginurl: "/auth/user/login"
+  github:
+    githubLoginUrl: "/auth/github/login"
+    githubCallBackUrl: "/auth/github/callback"
+    githubIdentityUrl: "https://github.com/login/oauth/authorize"
+    githubTokenUrl: "https://github.com/login/oauth/access_token"
+    githubApiUrl: "https://api.github.com/user"
+    githubClientId: "4009d6ec9036a3dda7c9"
+    githubClientSecret: "a6e796241b6a900d13640ffbefc2e83fb4be7366"
+    githubScope: "user public_repo"
+
+
 
 whitelistUrl:
   - "/auth/user/login"
-  - "/hei/ha"
+  - "/auth/github/login"
+  - "/auth/github/callback"
   - "/public/css/site.css"
+
